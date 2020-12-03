@@ -11,9 +11,10 @@ import com.bumptech.glide.Glide
 
 import com.mehrsoft.task_.R
 import com.mehrsoft.task_.data.model.PhotosItem
+import com.mehrsoft.task_.slider.Slide
 import com.squareup.picasso.Picasso
 
-class SliderPagerAdapter(private val context: Context, private val mList: List<PhotosItem>) :
+class SliderPagerAdapter(private val context: Context, private val mList: List<Slide>) :
     PagerAdapter() {
 
 
@@ -40,10 +41,11 @@ class SliderPagerAdapter(private val context: Context, private val mList: List<P
         val textView:TextView=view.findViewById(R.id.slide_title)
 
         //Glide.with(context).load(mList[position].url).into(imageView)
-        Picasso.get().load(mList[position].url).into(imageView);
+        /*Picasso.get().load(mList[position].url).into(imageView);
         textView.text=mList[position].title
+*/
 
-
+        Picasso.get().load(mList[position].img).into(imageView);
         container.addView(view)
 
         return view
