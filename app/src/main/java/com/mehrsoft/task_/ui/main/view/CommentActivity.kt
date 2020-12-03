@@ -10,18 +10,21 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.example.moviemvvm.slider.SliderPagerAdapter
-import com.google.android.material.tabs.TabLayout
 import com.mehrsoft.task_.R
 import com.mehrsoft.task_.data.api.ApiHelper
 import com.mehrsoft.task_.data.api.RetrofitBuilder
+import com.mehrsoft.task_.data.model.PhotosItem
 import com.mehrsoft.task_.data.model.comments.CommentItem
-import com.mehrsoft.task_.slider.Slide
 import com.mehrsoft.task_.ui.base.ViewModelFactory
 import com.mehrsoft.task_.ui.main.adapter.CommentAdapter
 import com.mehrsoft.task_.ui.main.viewmodel.MainViewModel
 import com.mehrsoft.task_.utils.Status
+import com.rd.PageIndicatorView
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_comment.*
+import java.util.concurrent.TimeUnit
 
 class CommentActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
@@ -34,15 +37,15 @@ class CommentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comment)
-//        val extras = intent.extras!!.getInt("id", 0)
+        val extras = intent.extras!!.getInt("id", 0)
 
 
         setupViewModel()
         setupUI()
-        //   getPostById()
-        //  getPhotos(extras)
+        getPostById(extras)
+        getPhotos(extras)
 
-        slideShow()
+        //slideShow()
     }
 
 
@@ -95,7 +98,7 @@ class CommentActivity : AppCompatActivity() {
                         c_progressBar.visibility = View.GONE
                         resource.data?.let { res ->
 
-                            //  slideShow(res)
+                            slideShow(res)
 
 
                         }
@@ -114,41 +117,33 @@ class CommentActivity : AppCompatActivity() {
         })
     }
 
-    private fun slideShow(): Boolean {
-        val indicator =
-            findViewById<TabLayout>(R.id.indicator)
+    private fun slideShow(res: List<PhotosItem>): Boolean {
         val viewPager =
             findViewById<ViewPager>(R.id.viewPager)
 
-        val slide_1 = Slide(R.drawable.slide_1)
-        val slide_2 = Slide(R.drawable.slide_2)
-        val slide_3 = Slide(R.drawable.slide_3)
 
-        val slides = ArrayList<Slide>()
+        val pageIndicatorView = findViewById<PageIndicatorView>(R.id.pageIndicatorView)
 
-        slides.add(slide_1)
-        slides.add(slide_2)
-        slides.add(slide_3)
+        val sliderPagerAdapter = SliderPagerAdapter(this, res)
 
-        val sliderPagerAdapter = SliderPagerAdapter(this, slides)
         viewPager.adapter = sliderPagerAdapter
-        indicator.setupWithViewPager(viewPager)
 
 
-        /*
-        val subscribe =
-            Observable.interval(INTERVAL_DURATION, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    if (viewPager.currentItem < res.size - 1) {
-                        viewPager.currentItem = viewPager.currentItem + 1
-                    } else {
-                        viewPager.currentItem = 0
-                    }
+        pageIndicatorView.count = sliderPagerAdapter.count
+        pageIndicatorView.selection = 1
+
+
+        val subscribe = Observable.interval(INTERVAL_DURATION, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                if (viewPager.currentItem < sliderPagerAdapter.count - 1) {
+                    viewPager.currentItem = viewPager.currentItem + 1
+                } else {
+                    viewPager.currentItem = 0
                 }
-        return compositeDisposable.add(subscribe)*/
+            }
+        return compositeDisposable.add(subscribe)
 
-        return true
 
     }
 

@@ -7,13 +7,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
-import com.bumptech.glide.Glide
-
 import com.mehrsoft.task_.R
-import com.mehrsoft.task_.data.model.PhotosItem
+import com.mehrsoft.task_.slider.Slide
 import com.squareup.picasso.Picasso
 
-class SliderPagerAdapter(private val context: Context, private val mList: List<PhotosItem>) :
+class LocalSliderPagerAdapter(private val context: Context, private val mList: List<Slide>) :
     PagerAdapter() {
 
 
@@ -34,15 +32,13 @@ class SliderPagerAdapter(private val context: Context, private val mList: List<P
         val inflater: LayoutInflater =
             context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-        val view:View=inflater.inflate(R.layout.slide_item,null)
+        val view: View = inflater.inflate(R.layout.slide_item, null)
 
-        val imageView:ImageView=view.findViewById(R.id.slide_img)
-        val textView:TextView=view.findViewById(R.id.slide_title)
+        val imageView: ImageView =view.findViewById(R.id.slide_img)
+        val textView: TextView =view.findViewById(R.id.slide_title)
 
-//        Glide.with(context).load(mList[position].url).into(imageView)
-
-        Picasso.get().load(mList[position].url).into(imageView);
-        textView.text=mList[position].title
+        textView.visibility=View.GONE
+        Picasso.get().load(mList[position].img).into(imageView);
 
 
 
