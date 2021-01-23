@@ -1,4 +1,3 @@
 # simpleAppMvvm
-This project Based on mvvm designPattern and Android architecture components ex:pagination
-#### NetworkConnection : Retrofit and movie api
+Simple app mvvm and retrofit network Connection
 
